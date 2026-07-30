@@ -5,7 +5,7 @@
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 14px 14px 16px;
-  max-height: calc(100vh - 150px);
+  max-height: calc(100vh - 170px);
   overflow: auto;
   box-shadow: var(--shadow);
 }

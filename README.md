@@ -134,6 +134,12 @@ za ochroną przed botami, więc dane są commitowane statycznie i nie są pobier
 
 Zakres jest ograniczony do **implicitów**; explicity chartów (prefiksy/sufiksy) są poza zakresem.
 
+## Autor
+
+**DDras** — [YouTube](https://www.youtube.com/@DDras) ·
+[Twitch](https://www.twitch.tv/ddras_) ·
+[Discord](https://discord.gg/a9UksqbPE3)
+
 ## Licencja
 
 MIT — patrz [LICENSE](LICENSE).
