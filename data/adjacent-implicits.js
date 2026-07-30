@@ -1,0 +1,54 @@
+/**
+ * Adjacent implicit modifiers (43).
+ * Source: https://www.poewiki.net/wiki/List_of_chart_mods#Adjacent_implicit_modifiers
+ * Raw dump: research/poewiki-dump.md
+ *
+ * scope: "adjacent" -> applies to areas adjacent to the chart carrying the implicit.
+ * NOTE: scope comes from the wiki list membership, never from the text. Some entries
+ * ("Atziri's Influence", the Wisps ones) do not mention "adjacent" at all.
+ */
+export const ADJACENT_IMPLICITS = [
+  { id: 'MapDeepwaterChartAdjacentArcanistBox1', ilvl: 1, weight: 300, category: 'strongbox', short: '+2 Arcanist Box', text: "Adjacent Areas contain 2 additional Arcanist's Strongboxes", stack: 'sum', numeric: { min: 2, max: 2, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentArcanistBox2', ilvl: 68, weight: 150, category: 'strongbox', short: '+3 Arcanist Box', text: "Adjacent Areas contain 3 additional Arcanist's Strongboxes", stack: 'sum', numeric: { min: 3, max: 3, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentBarrels1', ilvl: 1, weight: 700, category: 'misc', short: '+12-15 Barrels', text: 'Adjacent Areas contain (12-15) additional Clusters of Barrels', stack: 'sum', numeric: { min: 12, max: 15, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentBarrels2', ilvl: 68, weight: 700, category: 'misc', short: '+16-20 Barrels', text: 'Adjacent Areas contain (16-20) additional Clusters of Barrels', stack: 'sum', numeric: { min: 16, max: 20, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentCorrupted', ilvl: 68, weight: 100, category: 'misc', short: "Atziri's Influence", text: "Atziri's Influence", stack: 'flag' },
+  { id: 'MapDeepwaterChartAdjacentCrabPacks1', ilvl: 1, weight: 500, category: 'packs', short: '+8-10 Crab packs', text: 'Adjacent Areas contain (8-10) additional packs of Crabs', stack: 'sum', numeric: { min: 8, max: 10, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentCrabPacks2', ilvl: 68, weight: 500, category: 'packs', short: '+11-14 Crab packs', text: 'Adjacent Areas contain (11-14) additional packs of Crabs', stack: 'sum', numeric: { min: 11, max: 14, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentDivinerBox1', ilvl: 46, weight: 200, category: 'strongbox', short: '+2 Diviner Box', text: "Adjacent Areas contain 2 additional Diviner's Strongboxes", stack: 'sum', numeric: { min: 2, max: 2, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentDivinerBox2', ilvl: 68, weight: 100, category: 'strongbox', short: '+3 Diviner Box', text: "Adjacent Areas contain 3 additional Diviner's Strongboxes", stack: 'sum', numeric: { min: 3, max: 3, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentEssence1', ilvl: 1, weight: 1000, category: 'essence', short: '+1-2 Essence', text: 'Adjacent Areas contain (1-2) additional Imprisoned Monsters', stack: 'sum', numeric: { min: 1, max: 2, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentEssence2', ilvl: 46, weight: 700, category: 'essence', short: '+2-4 Essence', text: 'Adjacent Areas contain (2-4) additional Imprisoned Monsters', stack: 'sum', numeric: { min: 2, max: 4, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentEssence3', ilvl: 68, weight: 100, category: 'essence', short: '+5 Essence', text: 'Adjacent Areas contain 5 additional Imprisoned Monsters', stack: 'sum', numeric: { min: 5, max: 5, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentFish', ilvl: 68, weight: 1, category: 'misc', short: 'Exotic Fish', text: 'Adjacent Areas contain highly prized and exotic Fish', stack: 'flag' },
+  { id: 'MapDeepwaterChartAdjacentFractured', ilvl: 68, weight: 100, category: 'loot', short: '2% Fractured', text: 'Items dropped in adjacent Areas have 2% chance to be Fractured', stack: 'sum', numeric: { min: 2, max: 2, unit: '%' } },
+  { id: 'MapDeepwaterChartAdjacentGoldConvert1', ilvl: 1, weight: 300, category: 'currency', short: '40% gear to Gold', text: '40% of Equipment dropped by monsters in adjacent Areas is converted to Gold', stack: 'flag' },
+  { id: 'MapDeepwaterChartAdjacentGoldConvert2', ilvl: 46, weight: 100, category: 'currency', short: '80% gear to Gold', text: '80% of Equipment dropped by monsters in adjacent Areas is converted to Gold', stack: 'flag' },
+  { id: 'MapDeepwaterChartAdjacentGoldenLanterns', ilvl: 1, weight: 500, category: 'misc', short: '+4 Golden Lantern', text: 'Adjacent Areas contain 4 additional Golden Lanterns', stack: 'sum', numeric: { min: 4, max: 4, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentIncreasedMagicMonsters1', ilvl: 46, weight: 1000, category: 'density', short: '30% Magic mobs', text: '30% increased number of Magic Monsters in adjacent Areas', stack: 'sum', numeric: { min: 30, max: 30, unit: '%' } },
+  { id: 'MapDeepwaterChartAdjacentIncreasedMagicMonsters2', ilvl: 68, weight: 300, category: 'density', short: '60% Magic mobs', text: '60% increased number of Magic Monsters in adjacent Areas', stack: 'sum', numeric: { min: 60, max: 60, unit: '%' } },
+  { id: 'MapDeepwaterChartAdjacentIncreasedRareMonsters1', ilvl: 46, weight: 1000, category: 'density', short: '30% Rare mobs', text: '30% increased number of Rare Monsters in adjacent Areas', stack: 'sum', numeric: { min: 30, max: 30, unit: '%' } },
+  { id: 'MapDeepwaterChartAdjacentIncreasedRareMonsters2', ilvl: 68, weight: 300, category: 'density', short: '60% Rare mobs', text: '60% increased number of Rare Monsters in adjacent Areas', stack: 'sum', numeric: { min: 60, max: 60, unit: '%' } },
+  { id: 'MapDeepwaterChartAdjacentLostMessage1', ilvl: 68, weight: 100, category: 'misc', short: '+1 Message', text: 'Adjacent Areas contain an additional Message in a Bottle', stack: 'sum', numeric: { min: 1, max: 1, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentLostMessage2', ilvl: 68, weight: 50, category: 'misc', short: '+2 Messages', text: 'Adjacent Areas contain 2 additional Messages in Bottles', stack: 'sum', numeric: { min: 2, max: 2, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentOctopusPacks1', ilvl: 1, weight: 500, category: 'packs', short: '+8-10 Octopus packs', text: 'Adjacent Areas contains (8-10) additional packs of Octopi', stack: 'sum', numeric: { min: 8, max: 10, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentOctopusPacks2', ilvl: 68, weight: 500, category: 'packs', short: '+11-14 Octopus packs', text: 'Adjacent Areas contains (11-14) additional packs of Octopi', stack: 'sum', numeric: { min: 11, max: 14, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentOperativeBox1', ilvl: 68, weight: 300, category: 'strongbox', short: '+2 Operative Box', text: "Adjacent Areas contain 2 additional Operative's Strongboxes", stack: 'sum', numeric: { min: 2, max: 2, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentOperativeBox2', ilvl: 78, weight: 150, category: 'strongbox', short: '+3 Operative Box', text: "Adjacent Areas contain 3 additional Operative's Strongboxes", stack: 'sum', numeric: { min: 3, max: 3, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentPantheon', ilvl: 68, weight: 300, category: 'density', short: 'Pantheon Rares', text: 'Rare Monsters in adjacent Areas will have a Pantheon Modifier', stack: 'flag' },
+  { id: 'MapDeepwaterChartAdjacentStarfish1', ilvl: 46, weight: 500, category: 'packs', short: '+4-5 Starfish', text: 'Adjacent Areas contains (4-5) additional Giant Starfish', stack: 'sum', numeric: { min: 4, max: 5, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentStarfish2', ilvl: 68, weight: 300, category: 'packs', short: '+6-7 Starfish', text: 'Adjacent Areas contains (6-7) additional Giant Starfish', stack: 'sum', numeric: { min: 6, max: 7, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentStrongboxes1', ilvl: 1, weight: 1000, category: 'strongbox', short: '+1 Strongbox', text: 'Adjacent Areas contains an additional Strongbox', stack: 'sum', numeric: { min: 1, max: 1, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentStrongboxes2', ilvl: 46, weight: 700, category: 'strongbox', short: '+2-4 Strongbox', text: 'Adjacent Areas contain (2-4) additional Strongboxes', stack: 'sum', numeric: { min: 2, max: 4, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentStrongboxes3', ilvl: 68, weight: 100, category: 'strongbox', short: '+5 Strongbox', text: 'Adjacent Areas contain 5 additional Strongboxes', stack: 'sum', numeric: { min: 5, max: 5, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentTormentCages1', ilvl: 46, weight: 700, category: 'misc', short: '+1 Torment cage', text: 'Adjacent Areas contain an additional cage of Tormented Spirits', stack: 'sum', numeric: { min: 1, max: 1, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentTormentCages2', ilvl: 68, weight: 350, category: 'misc', short: '+2 Torment cages', text: 'Adjacent Areas contain 2 additional cages of Tormented Spirits', stack: 'sum', numeric: { min: 2, max: 2, unit: 'count' } },
+  { id: 'MapDeepwaterChartAdjacentUniqueAmulet1', ilvl: 1, weight: 300, category: 'unique', short: '10% Uniq Amulet', text: 'Amulets dropped in adjacent Areas have 10% chance to instead drop as a Unique Amulet', stack: 'sum', numeric: { min: 10, max: 10, unit: '%' } },
+  { id: 'MapDeepwaterChartAdjacentUniqueAmulet2', ilvl: 47, weight: 150, category: 'unique', short: '20% Uniq Amulet', text: 'Amulets dropped in adjacent Areas have 20% chance to instead drop as a Unique Amulet', stack: 'sum', numeric: { min: 20, max: 20, unit: '%' } },
+  { id: 'MapDeepwaterChartAdjacentUniqueBelt1', ilvl: 1, weight: 300, category: 'unique', short: '10% Uniq Belt', text: 'Belts dropped in adjacent Areas have 10% chance to instead drop as a Unique Belt', stack: 'sum', numeric: { min: 10, max: 10, unit: '%' } },
+  { id: 'MapDeepwaterChartAdjacentUniqueBelt2', ilvl: 47, weight: 150, category: 'unique', short: '20% Uniq Belt', text: 'Belts dropped in adjacent Areas have 20% chance to instead drop as a Unique Belt', stack: 'sum', numeric: { min: 20, max: 20, unit: '%' } },
+  { id: 'MapDeepwaterChartAdjacentUniqueRing1', ilvl: 1, weight: 300, category: 'unique', short: '10% Uniq Ring', text: 'Rings dropped in adjacent Areas have 10% chance to instead drop as a Unique Ring', stack: 'sum', numeric: { min: 10, max: 10, unit: '%' } },
+  { id: 'MapDeepwaterChartAdjacentUniqueRing2', ilvl: 47, weight: 150, category: 'unique', short: '20% Uniq Ring', text: 'Rings dropped in adjacent Areas have 20% chance to instead drop as a Unique Ring', stack: 'sum', numeric: { min: 20, max: 20, unit: '%' } },
+  { id: 'MapDeepwaterChartAdjacentWisps1', ilvl: 68, weight: 300, category: 'density', short: '2000 Wisps', text: 'Monsters have a chance to be Empowered by 2000 Wildwood Wisps', stack: 'flag' },
+  { id: 'MapDeepwaterChartAdjacentWisps2', ilvl: 68, weight: 150, category: 'density', short: '4000 Wisps', text: 'Monsters have a chance to be Empowered by 4000 Wildwood Wisps', stack: 'flag' },
+].map((m) => ({ ...m, scope: 'adjacent' }));

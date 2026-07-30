@@ -1,0 +1,11 @@
+{
+  "name": "poe-voyage-planner",
+  "version": "1.0.0",
+  "description": "Planer Voyage Board z ligi Curse of the Allflame (Path of Exile 3.29)",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "license": "MIT"
+}

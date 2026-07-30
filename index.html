@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voyage Planner — PoE: Curse of the Allflame</title>
+<meta name="description" content="Planer Voyage Board z ligi Curse of the Allflame: siatka 3x3, kształty chartów, implicity adjacent/voyage, border mody i zapis layoutu do JSON.">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/panels.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>&#x2693;</text></svg>">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <h1>Voyage Planner</h1>
+    <span class="brand-sub">Curse of the Allflame · Voyage Board 3×3</span>
+  </div>
+  <div id="toolbar" class="toolbar"></div>
+</header>
+
+<div id="armed-banner" class="armed-banner" hidden></div>
+
+<main class="app-main">
+  <section id="view-board" class="view view-board">
+    <aside id="area-panel" class="panel panel-left"></aside>
+
+    <div class="board-column">
+      <div id="board-host" class="board-host"></div>
+      <p class="board-help">
+        Klik na puste pole — wybór kształtu · <kbd>PPM</kbd> obrót o 90° · <kbd>Shift</kbd>+<kbd>PPM</kbd> w drugą stronę ·
+        <kbd>R</kbd> obrót · <kbd>Del</kbd> usuń · <kbd>1</kbd>–<kbd>5</kbd> kształt · strzałki nawigują.
+        Sloty na obrzeżu to border mody.
+      </p>
+    </div>
+
+    <aside id="mod-panel" class="panel panel-right"></aside>
+  </section>
+
+  <section id="view-summary" class="view view-summary" hidden></section>
+</main>
+
+<footer class="app-footer">
+  <p>
+    Dane modyfikatorów pochodzą z <a href="https://www.poewiki.net/wiki/Voyage" target="_blank" rel="noopener">poewiki.net</a>
+    (3.29 Curse of the Allflame). Narzędzie niezwiązane z Grinding Gear Games.
+    <a href="https://github.com/DraqDras/poe-voyage-planner" target="_blank" rel="noopener">Kod na GitHubie</a>.
+  </p>
+</footer>
+
+<div id="picker-root" class="picker-root" hidden></div>
+<div id="toast" class="toast" hidden></div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
