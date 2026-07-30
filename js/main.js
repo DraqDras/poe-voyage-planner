@@ -4,7 +4,6 @@ import { getMod } from '../data/mods.js';
 import * as boardView from './ui/boardView.js';
 import * as modPanel from './ui/modPanel.js';
 import * as areaPanel from './ui/areaPanel.js';
-import * as summaryView from './ui/summaryView.js';
 import * as ioControls from './ui/ioControls.js';
 import { escapeHtml } from './ui/picker.js';
 
@@ -13,8 +12,6 @@ const els = {
   area: document.getElementById('area-panel'),
   boardHost: document.getElementById('board-host'),
   mods: document.getElementById('mod-panel'),
-  boardView: document.getElementById('view-board'),
-  summaryView: document.getElementById('view-summary'),
   armed: document.getElementById('armed-banner'),
   toast: document.getElementById('toast'),
 };
@@ -23,22 +20,16 @@ ioControls.mount(els.toolbar);
 areaPanel.mount(els.area);
 boardView.mount(els.boardHost);
 modPanel.mount(els.mods);
-summaryView.mount(els.summaryView);
 
 loadLocal();
 
 function render() {
   const resolved = resolve(store.layout);
-  const summaryActive = store.ui.view === 'summary';
-
-  els.boardView.hidden = summaryActive;
-  els.summaryView.hidden = !summaryActive;
 
   ioControls.render();
   boardView.render(resolved);
   areaPanel.render(resolved);
   modPanel.render();
-  if (summaryActive) summaryView.render(resolved);
 
   renderArmed();
   renderToast();

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 
 import {
   N, E, S, W, FULL,
-  rotate, opposite, shapeOf, orientationsOf, allOrientations, describeMask, glyphOf, edgeCount,
+  rotate, opposite, shapeOf, orientationsOf, allOrientations, describeMask, edgeCount,
 } from '../js/core/shapes.js';
 
 test('rotating four times is the identity', () => {
@@ -65,13 +65,12 @@ test('the five shapes cover exactly the 15 non-empty masks, without overlap', ()
   assert.deepEqual([...all].sort((a, b) => a - b), Array.from({ length: 15 }, (_, i) => i + 1));
 });
 
-test('every mask has a distinct glyph and a readable description', () => {
-  const glyphs = new Set();
+test('every mask gets a readable, distinct description', () => {
+  const seen = new Set();
   for (let mask = 0; mask <= FULL; mask++) {
-    const g = glyphOf(mask);
-    assert.notEqual(g, '?', `mask ${mask} has no glyph`);
-    glyphs.add(g);
-    assert.ok(describeMask(mask).length > 0);
+    const text = describeMask(mask);
+    assert.ok(text.length > 0, `mask ${mask}`);
+    seen.add(text);
   }
-  assert.equal(glyphs.size, 16);
+  assert.equal(seen.size, 16);
 });

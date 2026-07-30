@@ -28,17 +28,24 @@
 
     <div class="board-column">
       <div id="board-host" class="board-host"></div>
+
+      <ul class="board-legend">
+        <li><span class="scope-dot scope-adjacent"></span> własny implicit Adjacent</li>
+        <li><span class="scope-dot scope-voyage"></span> własny implicit Voyage</li>
+        <li><span class="scope-dot scope-adjacent is-inherited"></span> dziedziczony Adjacent</li>
+        <li><span class="scope-dot scope-voyage is-inherited"></span> dziedziczony Voyage</li>
+      </ul>
+
       <p class="board-help">
         Klik na puste pole — wybór kształtu · <kbd>PPM</kbd> obrót o 90° · <kbd>Shift</kbd>+<kbd>PPM</kbd> w drugą stronę ·
         <kbd>R</kbd> obrót · <kbd>Del</kbd> usuń · <kbd>1</kbd>–<kbd>5</kbd> kształt · strzałki nawigują.
-        Sloty na obrzeżu to border mody.
+        Sloty na obrzeżu to border mody — nie są wypisywane w kafelkach, pełną rozpiskę pola
+        (razem z borderami) ma panel po lewej.
       </p>
     </div>
 
     <aside id="mod-panel" class="panel panel-right"></aside>
   </section>
-
-  <section id="view-summary" class="view view-summary" hidden></section>
 </main>
 
 <footer class="app-footer">

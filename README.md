@@ -18,8 +18,19 @@ i od razu widzisz, co działa na które pole.
   Przeciągasz mod na chart albo klikasz mod → klikasz pole.
 - **Podświetlanie zasięgu** — mod adjacent zieleni czterech sąsiadów, mod voyage całą planszę.
 - **13 border modów** na 12 slotach obrzeża — w grze są losowe, tutaj wybierasz te, które Ci wypadły.
-- **Podsumowanie** — macierz „kto na kogo wpływa" z kolorami chartów + tabela szczegółowa
-  z rozbiciem na własny implicit / sąsiadów / obrzeże, ze zliczaniem stacków (`×2`, `×4-8`).
+- **Dziedziczone mody widoczne w kafelku** — każdy chart wypisuje swój własny implicit *oraz*
+  wszystko, co do niego dociera od sąsiadów i z modów voyage-wide, razem ze źródłem (`A2`, `B1`).
+  Kolor kropki mówi skąd to jest:
+
+  | Kropka | Znaczenie |
+  |---|---|
+  | jasnozielona | własny implicit Adjacent |
+  | jasnożółta | własny implicit Voyage |
+  | ciemnozielona | dziedziczony Adjacent |
+  | ciemnożółta | dziedziczony Voyage |
+
+  Border mody **nie** są wypisywane w kafelkach — pełną rozpiskę pola razem z nimi
+  (i ze zliczaniem stacków `×2`, `×4-8`) ma panel *Area Modifiers* po lewej.
 - **Area level Voyage** liczony wg wiki: `średnia + 10`, obcięte do najwyższego użytego poziomu.
 - **Zapis i odczyt JSON** — plik z layoutem do odtworzenia później; autosave w przeglądarce
   między sesjami; upuszczenie `.json` na stronę też go wczytuje.
@@ -66,7 +77,7 @@ js/core/            czysta logika, zero DOM — tu celują testy
   resolve.js        agregacja: co działa na którym polu
   level.js          area level Voyage
   serialize.js      zapis/odczyt/migracja JSON
-js/ui/              widoki (board, panele, podsumowanie, picker, I/O)
+js/ui/              widoki (board, panele boczne, picker, I/O)
 data/               modyfikatory z wiki jako moduły ES
 test/               67 testów jednostkowych
 research/           surowy dump z poewiki (źródło dla data/)

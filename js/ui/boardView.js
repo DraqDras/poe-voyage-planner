@@ -3,14 +3,7 @@
 import { store, update, updateUI, toast } from '../state.js';
 import { CELLS, cellLabel, rowOf, colOf } from '../core/board.js';
 import { BORDER_SLOTS } from '../core/borders.js';
-import {
-  SHAPE_ORDER,
-  SHAPES,
-  orientationsOf,
-  rotate,
-  describeMask,
-  shapeOf,
-} from '../core/shapes.js';
+import { SHAPE_ORDER, SHAPES, orientationsOf, rotate, describeMask } from '../core/shapes.js';
 import { edgeStatusByCell } from '../core/validate.js';
 import { influenceOf } from '../core/resolve.js';
 import { getMod, BORDER_MODS } from '../../data/mods.js';
@@ -20,8 +13,6 @@ import { openPicker, escapeHtml, escapeAttr } from './picker.js';
 let boardEl = null;
 const cellNodes = new Map();
 const slotNodes = new Map();
-
-export const CHART_COLOR_COUNT = 9;
 
 export function mount(container) {
   boardEl = document.createElement('div');
@@ -280,6 +271,46 @@ export function clearHighlight() {
 
 /* ------------------------------------------------------------------ render */
 
+/**
+ * Everything that shows up inside a chart: its own implicit first, then what it inherits.
+ * Border mods are deliberately left out - they live on the perimeter slots, and repeating them
+ * inside the tile would triple the clutter on corner cells.
+ */
+function cellModRows(i, info) {
+  const rows = [];
+  if (info.own) {
+    rows.push({ mod: info.own, kind: 'own', from: null });
+  }
+  for (const e of info.fromNeighbors) {
+    rows.push({ mod: e.mod, kind: 'inherited', from: e.from });
+  }
+  for (const e of info.voyage) {
+    // The chart's own voyage implicit is already listed as "own".
+    if (e.from === i) continue;
+    rows.push({ mod: e.mod, kind: 'inherited', from: e.from });
+  }
+  return rows;
+}
+
+/** Polish plural: 1 modyfikator, 2-4 modyfikatory, 5+ modyfikatorów. */
+function pluralMods(n) {
+  const tens = n % 100;
+  const ones = n % 10;
+  if (n === 1) return 'modyfikator';
+  if (ones >= 2 && ones <= 4 && (tens < 12 || tens > 14)) return 'modyfikatory';
+  return 'modyfikatorów';
+}
+
+function modRowHtml(row) {
+  const { mod, kind, from } = row;
+  const title = kind === 'own' ? mod.text : `${mod.text}\n(dziedziczone z ${cellLabel(from)})`;
+  return `<span class="cell-mod is-${kind} scope-${mod.scope}" title="${escapeAttr(title)}">
+      <span class="scope-dot" aria-hidden="true"></span>
+      <span class="cell-mod-text">${escapeHtml(mod.short)}</span>
+      ${from !== null ? `<span class="cell-mod-from">${cellLabel(from)}</span>` : ''}
+    </span>`;
+}
+
 export function render(resolved) {
   const { layout, ui } = store;
   const statuses = edgeStatusByCell(resolved.validation);
@@ -289,15 +320,17 @@ export function render(resolved) {
     const node = cellNodes.get(i);
     const mod = cell.implicit ? getMod(cell.implicit) : null;
     const placed = cell.mask !== 0;
+    const rows = placed ? cellModRows(i, resolved.perCell[i]) : [];
 
     node.classList.toggle('is-empty', !placed);
     node.classList.toggle('is-selected', ui.selectedCell === i);
     node.classList.toggle('has-voyage-mod', !!mod && mod.scope === 'voyage');
-    node.dataset.chartColor = placed ? String(i % CHART_COLOR_COUNT) : '';
 
-    const shape = shapeOf(cell.mask);
+    const inheritedCount = rows.filter((r) => r.kind === 'inherited').length;
     const aria = placed
-      ? `Pole ${cellLabel(i)}, ${describeMask(cell.mask)}${mod ? `, mod: ${mod.short}` : ''}`
+      ? `Pole ${cellLabel(i)}, ${describeMask(cell.mask)}` +
+        `${mod ? `, własny mod: ${mod.short}` : ''}` +
+        `${inheritedCount ? `, dziedziczy ${inheritedCount} ${pluralMods(inheritedCount)}` : ''}`
       : `Pole ${cellLabel(i)}, puste. Enter aby wybrać kształt.`;
     node.setAttribute('aria-label', aria);
     node.title = placed
@@ -309,17 +342,10 @@ export function render(resolved) {
          <span class="cell-tag">${cellLabel(i)}</span>
          ${cell.label ? `<span class="cell-name">${escapeHtml(cell.label)}</span>` : ''}
          ${cell.areaLevel ? `<span class="cell-ilvl">L:${cell.areaLevel}</span>` : ''}
-         ${
-           mod
-             ? `<span class="cell-mod scope-${mod.scope}" title="${escapeAttr(mod.text)}">
-                  <span class="scope-dot"></span>${escapeHtml(mod.short)}
-                </span>`
-             : ''
-         }`
+         ${rows.length ? `<div class="cell-mods">${rows.map(modRowHtml).join('')}</div>` : ''}`
       : `<span class="cell-tag">${cellLabel(i)}</span>
          <span class="cell-plus">+</span>
          <span class="cell-hint">${escapeHtml(SHAPES.EMPTY.name)}</span>`;
-    void shape;
   }
 
   for (const slot of BORDER_SLOTS) {

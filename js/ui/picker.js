@@ -65,6 +65,25 @@ export function openPicker({ title, hint, items, columns = 5, onPick }) {
   };
 }
 
+/**
+ * In-app confirmation. Native `confirm()` is unreliable - embedded/preview browser contexts
+ * return false without ever showing a dialog, which silently swallows the action.
+ */
+export function confirmDialog({ title, hint, confirmLabel = 'Tak', cancelLabel = 'Anuluj', onConfirm }) {
+  openPicker({
+    title,
+    hint,
+    columns: 2,
+    items: [
+      { key: 'cancel', html: '<span class="picker-choice">✕</span>', label: cancelLabel },
+      { key: 'confirm', html: '<span class="picker-choice is-danger">✓</span>', label: confirmLabel },
+    ],
+    onPick: (key) => {
+      if (key === 'confirm') onConfirm();
+    },
+  });
+}
+
 document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Escape' && root && !root.hidden) {
     ev.preventDefault();

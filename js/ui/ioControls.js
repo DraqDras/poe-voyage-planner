@@ -1,7 +1,8 @@
 /** Toolbar: layout name, view switch, settings, JSON save/load, clear. */
 
-import { store, update, updateUI, replaceLayout, toast, clearLocal } from '../state.js';
+import { store, update, replaceLayout, toast, clearLocal } from '../state.js';
 import { createEmptyState, toJSON, fromJSON, suggestFilename, LayoutError } from '../core/serialize.js';
+import { confirmDialog } from './picker.js';
 
 let el = null;
 
@@ -10,11 +11,6 @@ export function mount(container) {
   el.innerHTML = `
     <input id="layout-name" class="layout-name" type="text" placeholder="Nazwa layoutu"
            aria-label="Nazwa layoutu" maxlength="60" autocomplete="off">
-
-    <div class="view-tabs" role="tablist" aria-label="Widok">
-      <button type="button" data-view="board" role="tab">Plansza</button>
-      <button type="button" data-view="summary" role="tab">Podsumowanie</button>
-    </div>
 
     <div class="toolbar-settings">
       <label class="check" title="Czy 'adjacent' to wszyscy czterej sąsiedzi, czy tylko połączeni przejściem.">
@@ -35,14 +31,6 @@ export function mount(container) {
   el.querySelector('#layout-name').addEventListener('input', (ev) => {
     update((layout) => {
       layout.name = ev.target.value;
-    });
-  });
-
-  el.querySelectorAll('.view-tabs button').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      updateUI((ui) => {
-        ui.view = btn.dataset.view;
-      });
     });
   });
 
@@ -67,12 +55,25 @@ export function mount(container) {
   });
 
   el.querySelector('#btn-clear').addEventListener('click', () => {
-    const hasContent =
-      store.layout.cells.some((c) => c.mask !== 0) || store.layout.borders.some((b) => b.modId);
-    if (hasContent && !confirm('Wyczyścić całą planszę? Tej operacji nie da się cofnąć.')) return;
-    clearLocal();
-    replaceLayout(createEmptyState());
-    toast('Plansza wyczyszczona.');
+    const { cells, borders } = store.layout;
+    const charts = cells.filter((c) => c.mask !== 0).length;
+    const mods = cells.filter((c) => c.implicit).length;
+    const borderMods = borders.filter((b) => b.modId).length;
+
+    if (charts + mods + borderMods === 0) {
+      clearBoard();
+      return;
+    }
+    confirmDialog({
+      title: 'Wyczyścić całą planszę?',
+      hint:
+        `Do usunięcia: ${plural(charts, 'chart', 'charty', 'chartów')}, ` +
+        `${plural(mods, 'implicit', 'implicity', 'implicitów')}, ` +
+        `${plural(borderMods, 'border mod', 'border mody', 'border modów')}. ` +
+        'Tej operacji nie da się cofnąć — zapisz layout do JSON, jeśli chcesz go zachować.',
+      confirmLabel: 'Wyczyść wszystko',
+      onConfirm: clearBoard,
+    });
   });
 
   // Dropping a .json anywhere on the page loads it.
@@ -86,6 +87,21 @@ export function mount(container) {
     ev.preventDefault();
     readFile(file);
   });
+}
+
+/** Polish plural: [1, 2-4, 5+] — e.g. plural(3, 'chart', 'charty', 'chartów') -> "3 charty". */
+function plural(n, one, few, many) {
+  const tens = n % 100;
+  const ones = n % 10;
+  if (n === 1) return `${n} ${one}`;
+  if (ones >= 2 && ones <= 4 && (tens < 12 || tens > 14)) return `${n} ${few}`;
+  return `${n} ${many}`;
+}
+
+function clearBoard() {
+  clearLocal();
+  replaceLayout(createEmptyState());
+  toast('Plansza wyczyszczona.', 'ok');
 }
 
 function saveToFile() {
@@ -120,18 +136,12 @@ async function readFile(file) {
 }
 
 export function render() {
-  const { layout, ui } = store;
+  const { layout } = store;
 
   const nameInput = el.querySelector('#layout-name');
   if (document.activeElement !== nameInput && nameInput.value !== layout.name) {
     nameInput.value = layout.name || '';
   }
-
-  el.querySelectorAll('.view-tabs button').forEach((btn) => {
-    const active = btn.dataset.view === ui.view;
-    btn.classList.toggle('is-active', active);
-    btn.setAttribute('aria-selected', String(active));
-  });
 
   el.querySelector('#opt-connected').checked = layout.settings.adjacency === 'connected';
   el.querySelector('#opt-open-edges').checked = layout.settings.openEdgesAllowed === false;

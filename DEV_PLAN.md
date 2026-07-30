@@ -25,6 +25,18 @@ Odstępstwa od pierwotnego planu, świadome:
 
 Wciąż w backlogu (Faza 10): share przez URL, eksport PNG, i18n PL/EN, explicity chartów.
 
+### Zmiana po pierwszym feedbacku (2026-07-30, iteracja 2)
+
+**Osobna zakładka „Podsumowanie" usunięta.** Wymagała przełączania widoku, żeby odpowiedzieć na
+pytanie, które zadaje się patrząc na planszę. Zamiast tego **każdy kafelek wypisuje wprost
+dziedziczone mody** — własny implicit jasną kropką, dziedziczone ciemniejszą (zielona = Adjacent,
+żółta = Voyage), ze wskazaniem pola źródłowego. Border mody celowo **nie** trafiają do kafelka:
+narożniki łapią po dwa i przy 4-6 dziedziczonych modach kafelek zrobiłby się nieczytelny —
+pełna rozpiska z borderami i stackami została w panelu *Area Modifiers*.
+
+Przy okazji usunięte: `js/ui/summaryView.js`, style podsumowania, `glyphOf()` (używany tylko tam),
+`ui.view` ze store'a.
+
 ---
 
 ## 1. Zakres (co narzędzie ma robić)
@@ -36,7 +48,7 @@ Wciąż w backlogu (Faza 10): share przez URL, eksport PNG, i18n PL/EN, explicit
 | F3 | 12 slotów border, ręczny wybór moda z listy wiki dla każdego slotu | MVP |
 | F4 | Panel implicitów po prawej + drag & drop na kafelek w siatce | MVP |
 | F5 | Podświetlanie na zielono zasięgu moda (sąsiedzi / całe Voyage) | MVP |
-| F6 | Widok podsumowania: co działa na którym polu | MVP |
+| F6 | Podgląd „co działa na którym polu" | MVP |
 | F7 | Zapis / odczyt layoutu do JSON | MVP |
 | F8 | Panel "Area Modifiers" (lewa strona, jak w grze) dla zaznaczonego pola | MVP |
 | F9 | Autosave w localStorage + share przez URL | v1.1 |

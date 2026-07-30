@@ -9,7 +9,6 @@ const listeners = new Set();
 export const store = {
   layout: createEmptyState(),
   ui: {
-    view: 'board',           // 'board' | 'summary'
     selectedCell: null,      // index 0..8
     pickerCell: null,        // cell whose shape picker is open
     borderSlot: null,        // slot whose mod picker is open

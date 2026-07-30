@@ -99,16 +99,3 @@ export function describeMask(mask) {
   const dirs = DIRS.filter((d) => hasEdge(mask, d)).map((d) => DIR_NAME[d]);
   return `${shape.name} (${dirs.join('-')})`;
 }
-
-/** Compact ASCII glyph for the summary table. */
-export function glyphOf(mask) {
-  const map = {
-    0: '·',
-    [N]: '╵', [E]: '╶', [S]: '╷', [W]: '╴',
-    [N | S]: '│', [E | W]: '─',
-    [N | E]: '└', [E | S]: '┌', [S | W]: '┐', [W | N]: '┘',
-    [N | E | S]: '├', [E | S | W]: '┬', [S | W | N]: '┤', [W | N | E]: '┴',
-    [FULL]: '┼',
-  };
-  return map[mask & FULL] ?? '?';
-}

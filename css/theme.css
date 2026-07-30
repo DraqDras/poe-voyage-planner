@@ -18,6 +18,10 @@
   --green-glow: rgba(95, 224, 137, 0.5);
   --amber: #e8b45f;
   --amber-soft: rgba(232, 180, 95, 0.16);
+
+  /* Darker variants mark an inherited modifier - one that arrives from another chart. */
+  --green-deep: #1f7f47;
+  --amber-deep: #8a6318;
   --red: #ef6b6b;
   --red-soft: rgba(239, 107, 107, 0.16);
   --grey: #4e6b62;
@@ -139,14 +143,14 @@ kbd {
   outline-offset: 2px;
 }
 
-.view-tabs, .scope-tabs {
+.scope-tabs {
   display: flex;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: hidden;
 }
 
-.view-tabs button, .scope-tabs button {
+.scope-tabs button {
   border: 0;
   background: transparent;
   color: var(--text-dim);
@@ -156,9 +160,9 @@ kbd {
   transition: background 0.15s, color 0.15s;
 }
 
-.view-tabs button:hover, .scope-tabs button:hover { color: var(--text); }
+.scope-tabs button:hover { color: var(--text); }
 
-.view-tabs button.is-active, .scope-tabs button.is-active {
+.scope-tabs button.is-active {
   background: var(--green-soft);
   color: var(--green);
 }
@@ -247,6 +251,23 @@ kbd {
 .scope-adjacent > .scope-dot, .scope-dot.scope-adjacent { background: var(--green); }
 .scope-voyage > .scope-dot, .scope-dot.scope-voyage { background: var(--amber); }
 .scope-border > .scope-dot, .scope-dot.scope-border { background: var(--parchment); }
+
+/* Inherited: same hue, darker. */
+.is-inherited.scope-adjacent > .scope-dot, .scope-dot.scope-adjacent.is-inherited { background: var(--green-deep); }
+.is-inherited.scope-voyage > .scope-dot, .scope-dot.scope-voyage.is-inherited { background: var(--amber-deep); }
+
+.board-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.board-legend li { display: flex; gap: 6px; align-items: center; }
 
 /* ---------------------------------------------------------------- armed banner + toast */
 
@@ -357,6 +378,9 @@ kbd {
 .picker-tile { width: 62px; height: 62px; }
 .picker-empty { font-size: 30px; color: var(--text-dim); line-height: 62px; }
 .picker-mod { display: flex; gap: 7px; align-items: center; font-size: 12.5px; }
+.picker-choice { font-size: 26px; line-height: 1.4; color: var(--text-dim); }
+.picker-choice.is-danger { color: var(--red); }
+.picker-item:hover .picker-choice { color: var(--text); }
 
 @media (max-width: 1180px) {
   .view-board { grid-template-columns: 1fr; }

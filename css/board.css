@@ -8,8 +8,9 @@
 
 .board {
   display: grid;
-  grid-template-columns: 96px repeat(3, minmax(96px, 150px)) 96px;
-  grid-template-rows: 34px repeat(3, minmax(96px, 150px)) 34px;
+  /* Tall enough that a cell can list its own implicit plus everything it inherits. */
+  grid-template-columns: 100px repeat(3, minmax(120px, 190px)) 100px;
+  grid-template-rows: 34px repeat(3, minmax(140px, 190px)) 34px;
   gap: 6px;
   padding: 12px;
   border-radius: 14px;
@@ -138,44 +139,84 @@
   text-overflow: ellipsis;
 }
 
-.cell-mod {
+/* Own implicit first, then everything inherited from neighbours and voyage-wide charts.
+   Border mods are intentionally absent - they belong to the perimeter slots. */
+.cell-mods {
   position: absolute;
-  left: 4px;
-  right: 4px;
-  bottom: 4px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 78%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.cell-mod {
   display: flex;
   gap: 5px;
   align-items: center;
-  justify-content: center;
-  padding: 3px 6px;
-  border-radius: 5px;
-  background: rgba(6, 20, 18, 0.92);
-  border: 1px solid var(--line-strong);
-  font-size: 10.5px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(5, 18, 16, 0.93);
+  border: 1px solid rgba(95, 224, 137, 0.18);
+  font-size: 9.5px;
+  line-height: 1.3;
+  flex: 0 0 auto;
+}
+
+.cell-mod .scope-dot { width: 7px; height: 7px; }
+
+.cell-mod-text {
+  flex: 1 1 auto;
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.cell-mod.scope-voyage { border-color: rgba(232, 180, 95, 0.6); }
+
+.cell-mod-from {
+  flex: 0 0 auto;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 8px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+
+.cell-mod.is-own {
+  border-color: var(--line-strong);
+  font-weight: 600;
+  color: var(--title);
+}
+.cell-mod.is-own.scope-voyage { border-color: rgba(232, 180, 95, 0.6); }
+
+.cell-mod.is-inherited {
+  background: rgba(5, 18, 16, 0.82);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--text-dim);
+}
 
 .cell.has-voyage-mod { box-shadow: 0 0 0 1px rgba(232, 180, 95, 0.4) inset; }
 
 @media (max-width: 900px) {
   .board {
-    grid-template-columns: 68px repeat(3, minmax(72px, 1fr)) 68px;
-    grid-template-rows: 30px repeat(3, minmax(72px, 1fr)) 30px;
+    grid-template-columns: 72px repeat(3, minmax(100px, 1fr)) 72px;
+    grid-template-rows: 30px repeat(3, minmax(130px, 1fr)) 30px;
   }
 }
 
 @media (max-width: 620px) {
   .board-host { padding: 0; }
   .board {
-    grid-template-columns: 44px repeat(3, minmax(56px, 1fr)) 44px;
-    grid-template-rows: 24px repeat(3, minmax(56px, 1fr)) 24px;
+    grid-template-columns: 44px repeat(3, minmax(66px, 1fr)) 44px;
+    grid-template-rows: 24px repeat(3, minmax(150px, 1fr)) 24px;
     gap: 4px;
     padding: 8px;
   }
   .bslot { font-size: 8px; padding: 1px 2px; }
-  .cell-mod { font-size: 8px; padding: 2px 3px; }
+  .cell-mod { font-size: 8px; padding: 1px 3px; gap: 3px; }
+  .cell-mod-from { display: none; }
   .cell-name { font-size: 9px; }
 }
