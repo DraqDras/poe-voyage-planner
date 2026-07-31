@@ -93,7 +93,22 @@
 .cell-plus { font-size: 26px; line-height: 1; opacity: 0.55; }
 .cell-hint { font-size: 10.5px; opacity: 0.7; }
 
-.tile-svg { display: block; width: 100%; height: 100%; }
+.tile-svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+
+/* Content sits on top of the tile artwork: header, outgoing strip, spacer, incoming strip. */
+.cell-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 3px;
+  pointer-events: none;
+}
+.cell-inner .cell-mod { pointer-events: auto; }
+.cell-spacer { flex: 1 1 auto; min-height: 4px; }
+
+.cell-head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 2px; }
 
 .tile-bg { fill: var(--parchment); opacity: 0.82; }
 .tile-path { stroke: #17110a; }
@@ -107,52 +122,40 @@
 .cell.is-affected .tile-bg { fill: #a8c9a4; }
 
 .cell-tag {
-  position: absolute;
-  top: 3px;
-  left: 5px;
   font-size: 10px;
   font-weight: 600;
   color: rgba(23, 17, 10, 0.6);
   letter-spacing: 0.06em;
 }
-.cell.is-empty .cell-tag { color: var(--text-dim); }
+.cell.is-empty .cell-tag { position: absolute; top: 3px; left: 5px; color: var(--text-dim); }
 
-.cell-ilvl {
-  position: absolute;
-  top: 3px;
-  right: 5px;
-  font-size: 10px;
-  font-weight: 600;
-  color: rgba(23, 17, 10, 0.6);
-}
+.cell-ilvl { font-size: 10px; font-weight: 600; color: rgba(23, 17, 10, 0.6); }
 
 .cell-name {
-  position: absolute;
-  left: 5px;
-  right: 5px;
-  top: 17px;
   font-size: 10.5px;
   text-align: center;
   color: rgba(23, 17, 10, 0.78);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: 0 2px;
 }
 
-/* Own implicit first, then everything inherited from neighbours and voyage-wide charts.
+/* Two strips, split by whether the modifier applies HERE.
+   Top (grey): this chart's Adjacent implicit - it hits the neighbours, not this area.
+   Bottom (bright): everything that actually applies here.
    Border mods are intentionally absent - they belong to the perimeter slots. */
 .cell-mods {
-  position: absolute;
-  left: 3px;
-  right: 3px;
-  bottom: 3px;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  max-height: 78%;
   overflow-y: auto;
   scrollbar-width: thin;
+  flex: 0 1 auto;
 }
+
+.cell-mods-in { max-height: 66%; }
+.cell-mods-out { max-height: 30%; }
 
 .cell-mod {
   display: flex;
@@ -160,8 +163,6 @@
   align-items: center;
   padding: 2px 5px;
   border-radius: 4px;
-  background: rgba(5, 18, 16, 0.93);
-  border: 1px solid rgba(95, 224, 137, 0.18);
   font-size: 9.5px;
   line-height: 1.3;
   flex: 0 0 auto;
@@ -185,18 +186,23 @@
   letter-spacing: 0.04em;
 }
 
-.cell-mod.is-own {
-  border-color: var(--line-strong);
-  font-weight: 600;
-  color: var(--title);
+/* Outgoing: greyed out on purpose - it does NOT apply to this area. */
+.cell-mod.is-out {
+  background: rgba(5, 18, 16, 0.78);
+  border: 1px dashed rgba(255, 255, 255, 0.16);
+  color: var(--grey-text);
 }
-.cell-mod.is-own.scope-voyage { border-color: rgba(232, 180, 95, 0.6); }
+.cell-mod.is-out .scope-dot { background: var(--grey); }
+.cell-mod.is-out .cell-mod-from { color: var(--grey); }
 
-.cell-mod.is-inherited {
-  background: rgba(5, 18, 16, 0.82);
-  border-color: rgba(255, 255, 255, 0.08);
-  color: var(--text-dim);
+/* Incoming: this is what the area actually gets. */
+.cell-mod.is-in {
+  background: rgba(5, 18, 16, 0.93);
+  border: 1px solid rgba(95, 224, 137, 0.3);
+  color: var(--title);
+  font-weight: 600;
 }
+.cell-mod.is-in.scope-voyage { border-color: rgba(232, 180, 95, 0.45); }
 
 .cell.has-voyage-mod { box-shadow: 0 0 0 1px rgba(232, 180, 95, 0.4) inset; }
 
@@ -211,7 +217,7 @@
   .board-host { padding: 0; }
   .board {
     grid-template-columns: 44px repeat(3, minmax(66px, 1fr)) 44px;
-    grid-template-rows: 24px repeat(3, minmax(150px, 1fr)) 24px;
+    grid-template-rows: 24px repeat(3, minmax(190px, 1fr)) 24px;
     gap: 4px;
     padding: 8px;
   }

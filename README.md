@@ -18,16 +18,16 @@ i od razu widzisz, co działa na które pole.
   Przeciągasz mod na chart albo klikasz mod → klikasz pole.
 - **Podświetlanie zasięgu** — mod adjacent zieleni czterech sąsiadów, mod voyage całą planszę.
 - **13 border modów** na 12 slotach obrzeża — w grze są losowe, tutaj wybierasz te, które Ci wypadły.
-- **Dziedziczone mody widoczne w kafelku** — każdy chart wypisuje swój własny implicit *oraz*
-  wszystko, co do niego dociera od sąsiadów i z modów voyage-wide, razem ze źródłem (`A2`, `B1`).
-  Kolor kropki mówi skąd to jest:
+- **Kafelek pokazuje, co na niego naprawdę działa** — i jest w tym celu podzielony na dwie strefy,
+  bo implicit Adjacent trafia w sąsiadów, a **nie** w chart, który go niesie:
 
-  | Kropka | Znaczenie |
-  |---|---|
-  | jasnozielona | własny implicit Adjacent |
-  | jasnożółta | własny implicit Voyage |
-  | ciemnozielona | dziedziczony Adjacent |
-  | ciemnożółta | dziedziczony Voyage |
+  | Strefa kafelka | Co tam jest | Wygląd |
+  |---|---|---|
+  | góra | własny implicit Adjacent — wychodzi na sąsiadów, tutaj nie działa | szary, przerywana ramka, podpis `→ sąsiedzi` |
+  | dół | wszystko, co faktycznie działa na to pole | jasne kolory + pole źródłowe (`A2`, `B1`) |
+
+  Na dole kropka zielona = Adjacent od sąsiada, żółta = Voyage (działa na całe Voyage, więc też
+  na chart, który go niesie — dlatego własny mod Voyage jest na dole, nie na górze).
 
   Border mody **nie** są wypisywane w kafelkach — pełną rozpiskę pola razem z nimi
   (i ze zliczaniem stacków `×2`, `×4-8`) ma panel *Area Modifiers* po lewej.

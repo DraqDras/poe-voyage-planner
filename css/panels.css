@@ -42,15 +42,22 @@
 
 .area-h3 { font-size: 13px; margin: 18px 0 8px; padding-top: 12px; border-top: 1px solid var(--line); }
 
+/* An Adjacent implicit does not apply to its own area, so it is greyed out here too -
+   same signal as the grey strip at the top of the tile. */
 .area-own {
   margin: 0 0 10px;
   padding: 8px 10px;
   border-radius: 6px;
   font-size: 12px;
-  background: var(--green-soft);
-  border-left: 3px solid var(--green);
+  background: rgba(255, 255, 255, 0.04);
+  border-left: 3px solid var(--grey);
+  color: var(--grey-text);
 }
-.area-own.scope-voyage { background: var(--amber-soft); border-left-color: var(--amber); }
+.area-own.scope-voyage {
+  background: var(--amber-soft);
+  border-left-color: var(--amber);
+  color: var(--text);
+}
 .area-own.is-none { background: rgba(255, 255, 255, 0.03); border-left-color: var(--grey); color: var(--text-dim); }
 .area-own em { color: var(--text-dim); font-size: 11px; }
 

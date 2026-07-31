@@ -272,24 +272,33 @@ export function clearHighlight() {
 /* ------------------------------------------------------------------ render */
 
 /**
- * Everything that shows up inside a chart: its own implicit first, then what it inherits.
- * Border mods are deliberately left out - they live on the perimeter slots, and repeating them
- * inside the tile would triple the clutter on corner cells.
+ * Splits a chart's modifiers by whether they actually apply to *this* area.
+ *
+ * An Adjacent implicit is an outgoing effect: it hits the four neighbours and pointedly not the
+ * chart carrying it. Listing it next to the incoming ones read as if it applied here, so it gets
+ * its own greyed-out strip at the top of the tile. Everything at the bottom really does apply.
+ *
+ * Border mods stay out of the tile entirely - they live on the perimeter slots, and repeating
+ * them here would double up on every corner. The Area Modifiers panel has the full picture.
  */
 function cellModRows(i, info) {
-  const rows = [];
+  const outgoing = [];
+  const incoming = [];
+
   if (info.own) {
-    rows.push({ mod: info.own, kind: 'own', from: null });
+    // Voyage implicits cover the whole board, so a chart's own voyage mod does apply here.
+    if (info.own.scope === 'voyage') incoming.push({ mod: info.own, from: null });
+    else outgoing.push({ mod: info.own, from: null });
   }
   for (const e of info.fromNeighbors) {
-    rows.push({ mod: e.mod, kind: 'inherited', from: e.from });
+    incoming.push({ mod: e.mod, from: e.from });
   }
   for (const e of info.voyage) {
-    // The chart's own voyage implicit is already listed as "own".
-    if (e.from === i) continue;
-    rows.push({ mod: e.mod, kind: 'inherited', from: e.from });
+    if (e.from === i) continue; // already listed as this chart's own
+    incoming.push({ mod: e.mod, from: e.from });
   }
-  return rows;
+
+  return { outgoing, incoming };
 }
 
 /** Polish plural: 1 modyfikator, 2-4 modyfikatory, 5+ modyfikatorów. */
@@ -301,13 +310,19 @@ function pluralMods(n) {
   return 'modyfikatorów';
 }
 
-function modRowHtml(row) {
-  const { mod, kind, from } = row;
-  const title = kind === 'own' ? mod.text : `${mod.text}\n(dziedziczone z ${cellLabel(from)})`;
-  return `<span class="cell-mod is-${kind} scope-${mod.scope}" title="${escapeAttr(title)}">
+function modRowHtml(row, direction) {
+  const { mod, from } = row;
+  const title =
+    direction === 'out'
+      ? `${mod.text}\n(działa na sąsiadów — NIE na to pole)`
+      : from === null
+        ? `${mod.text}\n(własny mod Voyage — działa też tutaj)`
+        : `${mod.text}\n(dociera z ${cellLabel(from)})`;
+
+  return `<span class="cell-mod is-${direction} scope-${mod.scope}" title="${escapeAttr(title)}">
       <span class="scope-dot" aria-hidden="true"></span>
       <span class="cell-mod-text">${escapeHtml(mod.short)}</span>
-      ${from !== null ? `<span class="cell-mod-from">${cellLabel(from)}</span>` : ''}
+      <span class="cell-mod-from">${direction === 'out' ? '→ sąsiedzi' : from === null ? '' : cellLabel(from)}</span>
     </span>`;
 }
 
@@ -320,17 +335,18 @@ export function render(resolved) {
     const node = cellNodes.get(i);
     const mod = cell.implicit ? getMod(cell.implicit) : null;
     const placed = cell.mask !== 0;
-    const rows = placed ? cellModRows(i, resolved.perCell[i]) : [];
+    const { outgoing, incoming } = placed
+      ? cellModRows(i, resolved.perCell[i])
+      : { outgoing: [], incoming: [] };
 
     node.classList.toggle('is-empty', !placed);
     node.classList.toggle('is-selected', ui.selectedCell === i);
     node.classList.toggle('has-voyage-mod', !!mod && mod.scope === 'voyage');
 
-    const inheritedCount = rows.filter((r) => r.kind === 'inherited').length;
     const aria = placed
       ? `Pole ${cellLabel(i)}, ${describeMask(cell.mask)}` +
-        `${mod ? `, własny mod: ${mod.short}` : ''}` +
-        `${inheritedCount ? `, dziedziczy ${inheritedCount} ${pluralMods(inheritedCount)}` : ''}`
+        `${outgoing.length ? `, wysyła do sąsiadów: ${outgoing[0].mod.short}` : ''}` +
+        `${incoming.length ? `, działa tu ${incoming.length} ${pluralMods(incoming.length)}` : ''}`
       : `Pole ${cellLabel(i)}, puste. Enter aby wybrać kształt.`;
     node.setAttribute('aria-label', aria);
     node.title = placed
@@ -339,10 +355,28 @@ export function render(resolved) {
 
     node.innerHTML = placed
       ? `${tileSvg(cell.mask, { statuses: statuses.get(i), showMarkers: true })}
-         <span class="cell-tag">${cellLabel(i)}</span>
-         ${cell.label ? `<span class="cell-name">${escapeHtml(cell.label)}</span>` : ''}
-         ${cell.areaLevel ? `<span class="cell-ilvl">L:${cell.areaLevel}</span>` : ''}
-         ${rows.length ? `<div class="cell-mods">${rows.map(modRowHtml).join('')}</div>` : ''}`
+         <div class="cell-inner">
+           <div class="cell-head">
+             <span class="cell-tag">${cellLabel(i)}</span>
+             ${cell.areaLevel ? `<span class="cell-ilvl">L:${cell.areaLevel}</span>` : ''}
+           </div>
+           ${cell.label ? `<div class="cell-name">${escapeHtml(cell.label)}</div>` : ''}
+           ${
+             outgoing.length
+               ? `<div class="cell-mods cell-mods-out">${outgoing
+                   .map((r) => modRowHtml(r, 'out'))
+                   .join('')}</div>`
+               : ''
+           }
+           <div class="cell-spacer"></div>
+           ${
+             incoming.length
+               ? `<div class="cell-mods cell-mods-in">${incoming
+                   .map((r) => modRowHtml(r, 'in'))
+                   .join('')}</div>`
+               : ''
+           }
+         </div>`
       : `<span class="cell-tag">${cellLabel(i)}</span>
          <span class="cell-plus">+</span>
          <span class="cell-hint">${escapeHtml(SHAPES.EMPTY.name)}</span>`;
