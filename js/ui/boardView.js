@@ -6,7 +6,7 @@ import { BORDER_SLOTS } from '../core/borders.js';
 import { SHAPE_ORDER, SHAPES, orientationsOf, rotate, describeMask } from '../core/shapes.js';
 import { edgeStatusByCell } from '../core/validate.js';
 import { influenceOf } from '../core/resolve.js';
-import { getMod, BORDER_MODS } from '../../data/mods.js';
+import { getMod, BORDER_MODS, CATEGORIES } from '../../data/mods.js';
 import { tileSvg } from './tile.js';
 import { openPicker, escapeHtml, escapeAttr } from './picker.js';
 
@@ -236,18 +236,26 @@ export function openBorderPicker(slotId) {
   const slot = BORDER_SLOTS.find((s) => s.id === slotId);
   const current = store.layout.borders.find((b) => b.slot === slotId)?.modId || null;
   const items = [
-    { key: '', html: '<span class="picker-empty">∅</span>', label: 'Brak', selected: !current },
+    {
+      key: '',
+      html: '<span class="picker-empty">∅</span>',
+      label: 'Brak',
+      group: 'Wyczyść slot',
+      selected: !current,
+    },
     ...BORDER_MODS.map((m) => ({
       key: m.id,
-      html: `<span class="picker-mod">${escapeHtml(m.short)}</span>`,
-      label: m.text,
+      html: `<span class="picker-mod${m.incomplete ? ' is-incomplete' : ''}">${escapeHtml(m.short)}</span>`,
+      label: m.text.replace(/\n/g, ' • '),
+      group: CATEGORIES[m.category] || 'Pozostałe',
       selected: m.id === current,
     })),
   ];
   openPicker({
     title: `Border — ${slot.name}`,
-    hint: 'Border mody są w grze losowe. Wybierz ten, który wypadł u Ciebie.',
+    hint: `Border mody są w grze losowe — wybierz ten, który wypadł u Ciebie. Pula liczy ${BORDER_MODS.length} modów.`,
     columns: 2,
+    searchable: true,
     items,
     onPick: (key) => {
       update((layout) => {

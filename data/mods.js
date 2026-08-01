@@ -35,10 +35,12 @@ export const CATEGORIES = {
   essence: 'Esencje',
   packs: 'Packi potworów',
   density: 'Gęstość / trudność',
+  boss: 'Bossowie i eventy',
   unique: 'Uniki',
   currency: 'Currency',
   loot: 'Loot',
   quality: 'Jakość',
+  chart: 'Charty i mody obszaru',
   misc: 'Pozostałe',
 };
 

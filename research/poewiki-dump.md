@@ -29,7 +29,118 @@ Ten plik jest źródłem prawdy dla `data/*.json`. Nie kasować — ponowne pobr
 
 ---
 
-## List of border modifiers (13)
+## Border modifiers — pełna pula (66), z Cargo
+
+> **Uwaga: sekcja „List of border modifiers" na stronie Voyage jest niekompletna i nieaktualna.**
+> Jest pisana ręcznie i wymienia tylko **13** modów, w dodatku z wartościami, których nie ma w grze
+> (np. „(12) additional packs of Sea Beasts", podczas gdy w danych są trzy osobne mody 8/12/16).
+> Nie generuj z niej `data/border-mods.js`.
+>
+> Prawdziwe źródło to tabela Cargo `mods`, id `DeepwaterBorder*`, domain 40. Zapytanie
+> (uruchamiane z konsoli na dowolnej stronie poewiki, bo Anubis blokuje dostęp z zewnątrz):
+>
+> ```js
+> fetch('/w/api.php?action=cargoquery&tables=mods&fields=' +
+>   encodeURIComponent('mods.id=mid,mods.stat_text_raw=raw') +
+>   '&where=' + encodeURIComponent('mods.id LIKE "DeepwaterBorder%"') +
+>   '&limit=500&order_by=' + encodeURIComponent('mods.id') + '&format=json')
+>   .then(r => r.json())
+> ```
+>
+> Tym samym sposobem potwierdzono, że listy chartów są kompletne:
+> `MapDeepwaterChartAdjacent%` → 43, `MapDeepwaterChartVoyage%` → 19. Żadna inna pula
+> `Deepwater*` (Altar / Hazard / Sword / Tattoo) nie zasila obrzeża.
+
+Stan na 2026-07-30, `id || stat_text_raw`:
+
+```
+DeepwaterBorderAdditionalCrabs1              || Adjacent Areas contain 8 additional packs of Crabs
+DeepwaterBorderAdditionalCrabs2              || Adjacent Areas contain 12 additional packs of Crabs
+DeepwaterBorderAdditionalCrabs3              || Adjacent Areas contain 16 additional packs of Crabs
+DeepwaterBorderAdditionalDrowned1            || Adjacent Areas contain 8 additional packs of the Drowned
+DeepwaterBorderAdditionalDrowned2            || Adjacent Areas contain 12 additional packs of the Drowned
+DeepwaterBorderAdditionalDrowned3            || Adjacent Areas contain 16 additional packs of the Drowned
+DeepwaterBorderAdditionalSeaBeasts1          || Adjacent Areas contain 8 additional packs of Sea Beasts
+DeepwaterBorderAdditionalSeaBeasts2          || Adjacent Areas contain 12 additional packs of Sea Beasts
+DeepwaterBorderAdditionalSeaBeasts3          || Adjacent Areas contain 16 additional packs of Sea Beasts
+DeepwaterBorderChanceToNotConsumeChart1      || Adjacent Charts have 30% chance to not be consumed when beginning a Voyage
+DeepwaterBorderChanceToNotConsumeChart2      || Adjacent Charts have 50% chance to not be consumed when beginning a Voyage
+DeepwaterBorderChartEffect1                  || Adjacent Areas have 40% increased explicit modifier magnitudes
+DeepwaterBorderChartEffect2                  || Adjacent Areas have 60% increased explicit modifier magnitudes
+DeepwaterBorderChartEffect3                  || Adjacent Areas have 80% increased explicit modifier magnitudes
+DeepwaterBorderCrabMiniboss                  || Adjacent Areas contain Captainsbane
+DeepwaterBorderCurrencyToStackedDecks        || Basic Currency items dropped by Monsters in adjacent Areas will instead drop as Stacked Decks
+DeepwaterBorderEquipmentToGold1              || 25% of Equipment dropped by monsters in adjacent Areas is converted to Gold
+DeepwaterBorderEquipmentToGold2              || 50% of Equipment dropped by monsters in adjacent Areas is converted to Gold
+DeepwaterBorderExpGain1                      || Players in adjacent Areas gain 100% increased Experience
+DeepwaterBorderExpGain2                      || Players in adjacent Areas gain 150% increased Experience
+DeepwaterBorderExpGain3                      || Players in adjacent Areas gain 200% increased Experience
+DeepwaterBorderGiantOctopus                  || Adjacent Areas contain Filthscrabble
+DeepwaterBorderGoldenLanterns                || Adjacent Areas contain 4 additional Golden Lanterns
+DeepwaterBorderIncreasedRareMonsters1        || 50% increased number of Rare Monsters in adjacent Areas
+DeepwaterBorderIncreasedRareMonsters2        || 75% increased number of Rare Monsters in adjacent Areas
+DeepwaterBorderIncreasedRareMonsters3        || 100% increased number of Rare Monsters in adjacent Areas
+DeepwaterBorderInfiniteLanterns              || Placing Lanterns does not reduce your Lantern count in adjacent Areas
+DeepwaterBorderIzaroObject                   || Adjacent Areas contain 2 Altars to the Goddess
+DeepwaterBorderMagicMonsterMods1             || Magic Monsters in adjacent Areas have an additional modifier
+DeepwaterBorderMagicMonsterMods2             || (BRAK TREŚCI W WIKI — stat_text jest null)
+DeepwaterBorderMonstersAtLeastMagic          || Monsters in adjacent Areas are at least Magic
+DeepwaterBorderMoreCurrency1                 || 50% more Currency found in adjacent Areas
+DeepwaterBorderMoreCurrency2                 || 75% more Currency found in adjacent Areas
+DeepwaterBorderMoreCurrency3                 || 100% more Currency found in adjacent Areas
+DeepwaterBorderMoreRarity1                   || 50% more Rarity of Items found in adjacent Areas
+DeepwaterBorderMoreRarity2                   || 75% more Rarity of Items found in adjacent Areas
+DeepwaterBorderMoreRarity3                   || 100% more Rarity of Items found in adjacent Areas
+DeepwaterBorderMoreScarabs1                  || 50% more Scarabs found in adjacent Areas
+DeepwaterBorderMoreScarabs2                  || 75% more Scarabs found in adjacent Areas
+DeepwaterBorderMoreScarabs3                  || 100% more Scarabs found in adjacent Areas
+DeepwaterBorderPackSize1                     || 16% increased Pack Size in adjacent Areas
+DeepwaterBorderPackSize2                     || 24% increased Pack Size in adjacent Areas
+DeepwaterBorderPackSize3                     || 32% increased Pack Size in adjacent Areas
+DeepwaterBorderPiratePack                    || Adjacent Areas contain a Brinerot raiding party
+DeepwaterBorderQuantityPerConnection1        || 50% reduced quantity of items found in adjacent Areas per connection
+                                             || 120% increased Quantity of Items found in adjacent Areas
+DeepwaterBorderQuantityPerConnection2        || 50% reduced quantity of items found in adjacent Areas per connection
+                                             || 180% increased Quantity of Items found in adjacent Areas
+DeepwaterBorderRandomDucatChest              || Adjacent Areas contain a lost Pirate's Locker
+DeepwaterBorderRareMonsterAncient            || Rare Monsters in adjacent Areas drop an additional Ancient Orb
+DeepwaterBorderRareMonsterAnnulment          || Rare Monsters in adjacent Areas drop an additional Orb of Annulment
+DeepwaterBorderRareMonsterBlessed            || Rare Monsters in adjacent Areas drop an additional Blessed Orb
+DeepwaterBorderRareMonsterChaos              || Rare Monsters in adjacent Areas drop an additional Chaos Orb
+DeepwaterBorderRareMonsterChromatic          || Rare Monsters in adjacent Areas drop an additional Chromatic Orb
+DeepwaterBorderRareMonsterDivine             || Rare Monsters in adjacent Areas drop an additional Divine Orb
+DeepwaterBorderRareMonsterExalted            || Rare Monsters in adjacent Areas drop an additional Exalted Orb
+DeepwaterBorderRareMonsterGemcutters         || Rare Monsters in adjacent Areas drop an additional Gemcutter's Prism
+DeepwaterBorderRareMonsterRegal              || Rare Monsters in adjacent Areas drop an additional Regal Orb
+DeepwaterBorderRareMonsterRegret             || Rare Monsters in adjacent Areas drop an additional Orb of Regret
+DeepwaterBorderRareMonsterScarab             || Rare Monsters in adjacent Areas drop an additional Scarab
+DeepwaterBorderRareMonsterSupport            || Rare Monsters in adjacent Areas have 20% chance to drop a Support Gem
+DeepwaterBorderRareMonsterVaal               || Rare Monsters in adjacent Areas drop an additional Vaal Orb
+DeepwaterBorderRareMonstersPerConnection1    || 50% increased number of Rare monsters in adjacent Areas per connection
+DeepwaterBorderRareMonstersPerConnection2    || 75% increased number of Rare monsters in adjacent Areas per connection
+DeepwaterBorderSulphurDrops                  || Rare Monsters in adjacent Areas drop Dead Man's Sulphur
+DeepwaterBorderTreasureAnchors1              || Adjacent Areas contain 2 additional Treasure Anchors
+DeepwaterBorderTreasureAnchors2              || Adjacent Areas contain 4 additional Treasure Anchors
+DeepwaterBorderTreasureAnchorsHardMode       || Adjacent Areas contain 2 additional Treasure Anchors
+```
+
+Dwie pozycje nie trafiły do `data/border-mods.js` (stąd 65, nie 66):
+
+- **`DeepwaterBorderTreasureAnchorsHardMode`** — wariant Hard Mode o identycznej treści co
+  `TreasureAnchors1`; w liście wyboru dałby dwie nierozróżnialne pozycje.
+- **`DeepwaterBorderMagicMonsterMods2`** — jest w `data/`, ale z zastrzeżeniem: wiki ma dla niego
+  **pusty `stat_text`**, więc treść jest nieznana. Po sąsiedzie (`...Mods1` = „have an additional
+  modifier") to prawie na pewno mocniejszy wariant, ale nie zgadujemy — pozycja jest oznaczona
+  `incomplete: true`. **Do uzupełnienia z innego źródła.**
+
+### Czego wiki NIE ma (a pojawia się w grze)
+
+Nic — screenshoty z gry (Sulphur na rzadkich, Chaos Orb, 8 packów Sea Beasts, 30% chance to not
+consume, 40% explicit magnitudes, 50% more Currency, quantity per connection, 16% Pack Size)
+**wszystkie** znalazły się w powyższej puli. Niekompletna była tylko ręcznie pisana sekcja na
+stronie Voyage, nie dane.
+
+### Stara, ręcznie pisana lista z wiki (13) — zachowana dla kontekstu
 
 ```
 100% more Currency found in adjacent Areas

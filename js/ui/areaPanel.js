@@ -87,18 +87,26 @@ export function mount(container) {
 function openImplicitPicker(i) {
   const current = store.layout.cells[i].implicit;
   const items = [
-    { key: '', html: '<span class="picker-empty">∅</span>', label: 'Brak implicitu', selected: !current },
+    {
+      key: '',
+      html: '<span class="picker-empty">∅</span>',
+      label: 'Brak implicitu',
+      group: 'Wyczyść',
+      selected: !current,
+    },
     ...CHART_IMPLICITS.map((m) => ({
       key: m.id,
       html: `<span class="picker-mod scope-${m.scope}"><span class="scope-dot"></span>${escapeHtml(m.short)}</span>`,
-      label: `${m.text} — ${CATEGORIES[m.category]}, i${m.ilvl}`,
+      label: `${m.text} — i${m.ilvl}`,
+      group: `${CATEGORIES[m.category]} — ${m.scope === 'voyage' ? 'Voyage' : 'Adjacent'}`,
       selected: m.id === current,
     })),
   ];
   openPicker({
     title: `Implicit — pole ${cellLabel(i)}`,
-    hint: 'Zielona kropka = Adjacent (sąsiedzi), pomarańczowa = Voyage (całe Voyage).',
+    hint: 'Zielona kropka = Adjacent (działa na sąsiadów), pomarańczowa = Voyage (całe Voyage).',
     columns: 2,
+    searchable: true,
     items,
     onPick: (key) => assignImplicit(i, key || null),
   });

@@ -21,10 +21,49 @@ export function closePicker() {
  *          items: Array<{key: string, html: string, label: string, selected?: boolean}>,
  *          onPick: (key: string) => void}} config
  */
-export function openPicker({ title, hint, items, columns = 5, onPick }) {
+export function openPicker({ title, hint, items, columns = 5, searchable = false, onPick }) {
   const el = ensureRoot();
   lastFocus = document.activeElement;
   el.hidden = false;
+
+  const itemHtml = (it) => `
+    <button type="button" class="picker-item${it.selected ? ' is-selected' : ''}"
+            data-key="${escapeAttr(it.key)}" data-search="${escapeAttr(
+              `${it.label} ${it.group || ''} ${it.key}`.toLowerCase()
+            )}" title="${escapeAttr(it.label)}">
+      ${it.html}
+      <span class="picker-label">${escapeHtml(it.label)}</span>
+    </button>`;
+
+  // Items carrying a `group` are rendered under headings; a mixed list would be ambiguous,
+  // so grouping kicks in only when every item declares one.
+  const grouped = items.length > 0 && items.every((it) => it.group);
+  let body;
+  if (grouped) {
+    const order = [];
+    const buckets = new Map();
+    for (const it of items) {
+      if (!buckets.has(it.group)) {
+        buckets.set(it.group, []);
+        order.push(it.group);
+      }
+      buckets.get(it.group).push(it);
+    }
+    body = order
+      .map(
+        (g) => `<section class="picker-group">
+            <h3>${escapeHtml(g)}</h3>
+            <div class="picker-grid" style="--picker-cols:${columns}">${buckets
+              .get(g)
+              .map(itemHtml)
+              .join('')}</div>
+          </section>`
+      )
+      .join('');
+  } else {
+    body = `<div class="picker-grid" style="--picker-cols:${columns}">${items.map(itemHtml).join('')}</div>`;
+  }
+
   el.innerHTML = `
     <div class="picker-backdrop" data-close="1"></div>
     <div class="picker-dialog" role="dialog" aria-modal="true" aria-label="${escapeAttr(title)}">
@@ -33,21 +72,36 @@ export function openPicker({ title, hint, items, columns = 5, onPick }) {
         <button type="button" class="picker-close" data-close="1" aria-label="Zamknij">×</button>
       </header>
       ${hint ? `<p class="picker-hint">${escapeHtml(hint)}</p>` : ''}
-      <div class="picker-grid" style="--picker-cols:${columns}">
-        ${items
-          .map(
-            (it) => `
-          <button type="button" class="picker-item${it.selected ? ' is-selected' : ''}"
-                  data-key="${escapeAttr(it.key)}" title="${escapeAttr(it.label)}">
-            ${it.html}
-            <span class="picker-label">${escapeHtml(it.label)}</span>
-          </button>`
-          )
-          .join('')}
-      </div>
+      ${
+        searchable
+          ? `<input type="search" class="picker-search" placeholder="Szukaj… (${items.length} pozycji)"
+                    aria-label="Szukaj w liście" autocomplete="off">
+             <p class="picker-empty-msg" hidden>Nic nie pasuje do wyszukiwania.</p>`
+          : ''
+      }
+      <div class="picker-body">${body}</div>
     </div>`;
 
-  el.querySelector('.picker-item')?.focus();
+  const search = el.querySelector('.picker-search');
+  if (search) {
+    search.addEventListener('input', () => {
+      const q = search.value.trim().toLowerCase();
+      let visible = 0;
+      for (const item of el.querySelectorAll('.picker-item')) {
+        const match = !q || item.dataset.search.includes(q);
+        item.hidden = !match;
+        if (match) visible++;
+      }
+      // Hide a group heading once all of its items are filtered out.
+      for (const group of el.querySelectorAll('.picker-group')) {
+        group.hidden = ![...group.querySelectorAll('.picker-item')].some((i) => !i.hidden);
+      }
+      el.querySelector('.picker-empty-msg').hidden = visible > 0;
+    });
+    search.focus();
+  } else {
+    el.querySelector('.picker-item')?.focus();
+  }
 
   el.onclick = (ev) => {
     const target = ev.target instanceof Element ? ev.target : null;

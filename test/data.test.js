@@ -5,11 +5,35 @@ import {
   ADJACENT_IMPLICITS, VOYAGE_IMPLICITS, BORDER_MODS, CHART_IMPLICITS, ALL_MODS, getMod, CATEGORIES,
 } from '../data/mods.js';
 
-test('the data set matches the wiki counts', () => {
+test('the data set matches the counts in the wiki Cargo tables', () => {
   assert.equal(ADJACENT_IMPLICITS.length, 43, 'adjacent implicit modifiers');
   assert.equal(VOYAGE_IMPLICITS.length, 19, 'voyage implicit modifiers');
-  assert.equal(BORDER_MODS.length, 13, 'border modifiers');
+  // 66 DeepwaterBorder* mods exist; TreasureAnchorsHardMode is a byte-identical duplicate.
+  assert.equal(BORDER_MODS.length, 65, 'border modifiers');
   assert.equal(CHART_IMPLICITS.length, 62);
+});
+
+test('border mods use the real internal ids, not hand-made ones', () => {
+  for (const mod of BORDER_MODS) {
+    assert.match(mod.id, /^DeepwaterBorder[A-Za-z0-9]+$/, `${mod.id}`);
+  }
+});
+
+test('the Hard Mode Treasure Anchor duplicate stays out of the list', () => {
+  assert.equal(
+    BORDER_MODS.some((m) => m.id === 'DeepwaterBorderTreasureAnchorsHardMode'),
+    false
+  );
+  const texts = BORDER_MODS.map((m) => m.text);
+  assert.equal(new Set(texts).size, texts.length, 'two border mods share the same text');
+});
+
+test('"more" multipliers are never summed', () => {
+  for (const mod of BORDER_MODS) {
+    if (/\bmore\b/.test(mod.text)) {
+      assert.equal(mod.stack, 'flag', `${mod.id}: "more" is multiplicative, it must not sum`);
+    }
+  }
 });
 
 test('every id is unique', () => {

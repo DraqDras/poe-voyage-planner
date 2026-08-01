@@ -6,7 +6,7 @@ Publikowane jako publiczne repo + GitHub Pages.
 - Robocza nazwa repo: `poe-voyage-planner`
 - Katalog roboczy: `C:\Users\draq1\My_PROJECTS\VoyagePlanner`
 - Dane źródłowe: [research/poewiki-dump.md](research/poewiki-dump.md) (43 adjacent implicity,
-  19 voyage implicitów, 13 border modów — już pobrane, nie trzeba scrape'ować ponownie)
+  19 voyage implicitów, 65 border modów — już pobrane, nie trzeba scrape'ować ponownie)
 
 ---
 
@@ -36,6 +36,19 @@ pełna rozpiska z borderami i stackami została w panelu *Area Modifiers*.
 
 Przy okazji usunięte: `js/ui/summaryView.js`, style podsumowania, `glyphOf()` (używany tylko tam),
 `ui.view` ze store'a.
+
+### Korekta danych (2026-07-30, iteracja 5)
+
+**Pula border modów liczy 66, nie 13.** Sekcja „List of border modifiers" na stronie Voyage jest
+pisana ręcznie i była niekompletna — brakowało m.in. wszystkich orbów na rzadkich potworach,
+Pack Size, explicit magnitudes, „chart nie znika", packów the Drowned, Scarabów i minibossów;
+podane wartości też się nie zgadzały z grą. Prawdziwe źródło to tabela Cargo `mods`
+(`id LIKE "DeepwaterBorder%"`, domain 40) — zapytanie zapisane w `research/poewiki-dump.md`.
+
+Tym samym sposobem potwierdzono, że listy chartów są kompletne (43 + 19), więc poprawka dotyczy
+wyłącznie obrzeża. Ponieważ id-ki borderów były nasze własne (`border_*`), doszła migracja
+`schemaVersion` 1 → 2 mapująca stare id na prawdziwe. Picker borderów i implicitów dostał
+wyszukiwarkę i grupowanie — 65 pozycji w płaskiej liście było nie do przejrzenia.
 
 ---
 

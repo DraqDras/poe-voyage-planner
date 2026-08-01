@@ -17,7 +17,8 @@ i od razu widzisz, co działa na które pole.
 - **62 implicity chartów** (43 adjacent + 19 voyage) z wiki, z wyszukiwarką i grupowaniem po kategorii.
   Przeciągasz mod na chart albo klikasz mod → klikasz pole.
 - **Podświetlanie zasięgu** — mod adjacent zieleni czterech sąsiadów, mod voyage całą planszę.
-- **13 border modów** na 12 slotach obrzeża — w grze są losowe, tutaj wybierasz te, które Ci wypadły.
+- **65 border modów** na 12 slotach obrzeża — w grze są losowe, tutaj wybierasz te, które Ci wypadły.
+  Lista ma wyszukiwarkę i grupy, bo pula jest spora.
 - **Kafelek pokazuje, co na niego naprawdę działa** — i jest w tym celu podzielony na dwie strefy,
   bo implicit Adjacent trafia w sąsiadów, a **nie** w chart, który go niesie:
 
@@ -94,7 +95,7 @@ to rotacja bitów. Dzięki temu nie da się doprowadzić stanu do „rotacji nie
 
 ```jsonc
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "app": "poe-voyage-planner",
   "savedAt": "2026-07-30T18:20:00.000Z",
   "name": "Strongbox farm",
@@ -103,13 +104,16 @@ to rotacja bitów. Dzięki temu nie da się doprowadzić stanu do „rotacji nie
     { "i": 0, "mask": 6, "label": "Lost Ruins", "areaLevel": 83,
       "implicit": "MapDeepwaterChartAdjacentStrongboxes2" }
   ],
-  "borders": [ { "slot": "N-0", "modId": "border_currency" } ]
+  "borders": [ { "slot": "N-0", "modId": "DeepwaterBorderMoreCurrency3" } ]
 }
 ```
 
 Zapisywane są **tylko identyfikatory modów**, nie ich treść — dzięki temu poprawka literówki
 w `data/` nie psuje starych plików. Nieznany identyfikator (np. z nowszego patcha) wczytuje się
 jako `? id` zamiast wywalać cały plik.
+
+Pliki w `schemaVersion: 1` wczytują się normalnie: ich tymczasowe id-ki borderów (`border_*`,
+z czasów gdy znaliśmy tylko 13 modów) są mapowane na prawdziwe wewnętrzne nazwy przy wczytywaniu.
 
 ## Niepewności w mechanice
 
@@ -127,10 +131,15 @@ Jeśli któreś z tych założeń rozjedzie się z grą — [zgłoś issue](http
 
 ## Dane
 
-Wszystkie modyfikatory pochodzą z [poewiki.net](https://www.poewiki.net/wiki/Voyage)
-([Voyage](https://www.poewiki.net/wiki/Voyage), [List of chart mods](https://www.poewiki.net/wiki/List_of_chart_mods)),
-stan na 3.29. Surowy dump leży w [`research/poewiki-dump.md`](research/poewiki-dump.md) — wiki stoi
-za ochroną przed botami, więc dane są commitowane statycznie i nie są pobierane w runtime.
+Wszystkie modyfikatory pochodzą z [poewiki.net](https://www.poewiki.net/wiki/Voyage), stan na 3.29:
+**43 implicity Adjacent + 19 Voyage + 65 border modów**. Surowy dump leży
+w [`research/poewiki-dump.md`](research/poewiki-dump.md) — wiki stoi za ochroną przed botami,
+więc dane są commitowane statycznie i nie są pobierane w runtime.
+
+> **Uwaga dla współtwórców:** border modów **nie** bierz z sekcji „List of border modifiers"
+> na stronie Voyage. Ta sekcja jest pisana ręcznie, wymienia tylko 13 z 66 modów i podaje wartości,
+> których nie ma w grze. Prawdziwym źródłem jest tabela Cargo `mods` (id `DeepwaterBorder*`) —
+> zapytanie jest w dumpie.
 
 Zakres jest ograniczony do **implicitów**; explicity chartów (prefiksy/sufiksy) są poza zakresem.
 

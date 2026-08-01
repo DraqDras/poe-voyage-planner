@@ -4,8 +4,33 @@ import { CELL_COUNT, emptyCells } from './board.js';
 import { BORDER_SLOT_IDS, emptyBorders, getSlot } from './borders.js';
 import { FULL } from './shapes.js';
 
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 export const APP_ID = 'poe-voyage-planner';
+
+/**
+ * v1 -> v2: border mods moved from our own invented ids to the real internal ones, once the
+ * full 66-mod pool was found in the wiki's Cargo data (v1 only knew the 13 hand-written ones).
+ * Where v1 collapsed a tier ladder into a single entry, we map to the tier its text described.
+ */
+export const BORDER_ID_MIGRATION_V1_V2 = {
+  border_currency: 'DeepwaterBorderMoreCurrency3', // "100% more Currency"
+  border_rarity: 'DeepwaterBorderMoreRarity3', // "100% more Rarity"
+  border_sea_beasts: 'DeepwaterBorderAdditionalSeaBeasts2', // "(12) packs"
+  border_crabs: 'DeepwaterBorderAdditionalCrabs1', // "(8) packs"
+  border_golden_lanterns: 'DeepwaterBorderGoldenLanterns',
+  border_altars: 'DeepwaterBorderIzaroObject',
+  border_treasure_anchors: 'DeepwaterBorderTreasureAnchors1', // "(2) anchors"
+  border_pirates_locker: 'DeepwaterBorderRandomDucatChest',
+  border_rare_monsters: 'DeepwaterBorderIncreasedRareMonsters2', // wiki wrote "(75/100)%"
+  border_min_magic: 'DeepwaterBorderMonstersAtLeastMagic',
+  border_free_lanterns: 'DeepwaterBorderInfiniteLanterns',
+  border_experience: 'DeepwaterBorderExpGain1', // "100% increased Experience"
+  border_exalted: 'DeepwaterBorderRareMonsterExalted',
+};
+
+export function migrateBorderModId(modId) {
+  return BORDER_ID_MIGRATION_V1_V2[modId] || modId;
+}
 
 export const DEFAULT_SETTINGS = {
   /** 'orthogonal' = all four neighbours; 'connected' = only neighbours joined by an open passage. */
@@ -128,6 +153,7 @@ export function fromJSON(raw) {
   }
 
   if (Array.isArray(data.borders)) {
+    let migrated = 0;
     for (const b of data.borders) {
       if (!b || typeof b !== 'object') continue;
       if (!getSlot(b.slot)) {
@@ -135,7 +161,15 @@ export function fromJSON(raw) {
         continue;
       }
       const target = state.borders.find((x) => x.slot === b.slot);
-      target.modId = b.modId || null;
+      const modId = b.modId || null;
+      const mapped = migrateBorderModId(modId);
+      if (modId && mapped !== modId) migrated++;
+      target.modId = mapped;
+    }
+    if (migrated > 0) {
+      warnings.push(
+        `Przeniesiono ${migrated} border modów na nowe identyfikatory (pula rozrosła się z 13 do 65 pozycji).`
+      );
     }
   }
 

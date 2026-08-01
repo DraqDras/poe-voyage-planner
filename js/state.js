@@ -79,6 +79,8 @@ export function loadLocal() {
     if (!raw) return false;
     const { state } = fromJSON(raw);
     store.layout = state;
+    // Write the migrated shape straight back, so the stored copy stops being a legacy one.
+    saveLocal();
     return true;
   } catch {
     return false;
