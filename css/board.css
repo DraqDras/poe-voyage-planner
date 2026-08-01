@@ -93,7 +93,11 @@
 .cell-plus { font-size: 26px; line-height: 1; opacity: 0.55; }
 .cell-hint { font-size: 10.5px; opacity: 0.7; }
 
-.tile-svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+/* The tile artwork sizes itself to its container - the picker renders it at a fixed 62px,
+   the board stretches it behind the cell content. Keep the absolute positioning scoped to the
+   board, or it escapes to the nearest positioned ancestor (the picker dialog). */
+.tile-svg { display: block; }
+.cell > .tile-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 
 /* Content sits on top of the tile artwork: header, outgoing strip, spacer, incoming strip. */
 .cell-inner {
